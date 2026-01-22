@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickBuilder | Free Resume Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white !important; }
+            .resume-page { 
+                box-shadow: none !important; 
+                margin: 0 !important; 
+                border: none !important;
+            }
+        }
+        .resume-page {
+            width: 210mm;
+            min-height: 297mm;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+
+    <div class="flex flex-col lg:flex-row h-screen">
+        
+        <div class="lg:w-1/3 w-full bg-white p-8 overflow-y-auto shadow-xl no-print">
+            <h1 class="text-2xl font-bold text-blue-600 mb-6">Resume Creator</h1>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold">Full Name</label>
+                    <input type="text" id="in-name" placeholder="John Doe" class="w-full border rounded p-2 focus:ring-2 focus:ring-blue-400 outline-none" oninput="update()">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold">Job Title</label>
+                    <input type="text" id="in-title" placeholder="Full Stack Developer" class="w-full border rounded p-2 focus:ring-2 focus:ring-blue-400 outline-none" oninput="update()">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold">Email & Phone</label>
+                    <input type="text" id="in-contact" placeholder="john@email.com | +123 456" class="w-full border rounded p-2 focus:ring-2 focus:ring-blue-400 outline-none" oninput="update()">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold">Summary</label>
+                    <textarea id="in-summary" class="w-full border rounded p-2 h-24" placeholder="Briefly describe yourself..." oninput="update()"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold">Experience</label>
+                    <textarea id="in-exp" class="w-full border rounded p-2 h-32" placeholder="Company A - Senior Dev (2020-2023)..." oninput="update()"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold">Skills (Comma separated)</label>
+                    <input type="text" id="in-skills" placeholder="React, Node.js, CSS" class="w-full border rounded p-2" oninput="update()">
+                </div>
+            </div>
+
+            <button onclick="window.print()" class="w-full mt-8 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition">
+                Download PDF / Print
+            </button>
+        </div>
+
+        <div class="lg:w-2/3 w-full p-8 flex justify-center overflow-y-auto">
+            <div id="print-area" class="resume-page bg-white p-12 shadow-2xl">
+                <div class="border-b-4 border-blue-600 pb-4 mb-6">
+                    <h1 id="out-name" class="text-4xl font-black uppercase text-gray-800 tracking-tight">John Doe</h1>
+                    <p id="out-title" class="text-xl text-blue-600 font-medium">Full Stack Developer</p>
+                    <p id="out-contact" class="text-gray-500 text-sm mt-1 italic">john@email.com | +123 456</p>
+                </div>
+
+                <div class="grid grid-cols-3 gap-8">
+                    <div class="col-span-2">
+                        <h2 class="font-bold text-gray-800 border-b-2 mb-2">PROFESSIONAL SUMMARY</h2>
+                        <p id="out-summary" class="text-gray-700 text-sm mb-6 leading-relaxed">Highly motivated developer...</p>
+
+                        <h2 class="font-bold text-gray-800 border-b-2 mb-2">WORK EXPERIENCE</h2>
+                        <div id="out-exp" class="text-gray-700 text-sm whitespace-pre-wrap leading-relaxed">Your experience details will appear here...</div>
+                    </div>
+
+                    <div>
+                        <h2 class="font-bold text-gray-800 border-b-2 mb-2">SKILLS</h2>
+                        <ul id="out-skills" class="text-gray-700 text-sm list-disc list-inside space-y-1">
+                            <li>JavaScript</li>
+                            <li>React</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function update() {
+            // Get values
+            const name = document.getElementById('in-name').value || "John Doe";
+            const title = document.getElementById('in-title').value || "Your Professional Title";
+            const contact = document.getElementById('in-contact').value || "email@example.com | 000-000";
+            const summary = document.getElementById('in-summary').value || "Enter your summary in the editor...";
+            const exp = document.getElementById('in-exp').value || "Work history goes here...";
+            const skills = document.getElementById('in-skills').value.split(',');
+
+            // Set values
+            document.getElementById('out-name').innerText = name;
+            document.getElementById('out-title').innerText = title;
+            document.getElementById('out-contact').innerText = contact;
+            document.getElementById('out-summary').innerText = summary;
+            document.getElementById('out-exp').innerText = exp;
+
+            // Handle Skills List
+            const skillList = document.getElementById('out-skills');
+            skillList.innerHTML = '';
+            skills.forEach(skill => {
+                if(skill.trim() !== "") {
+                    let li = document.createElement('li');
+                    li.innerText = skill.trim();
+                    skillList.appendChild(li);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
