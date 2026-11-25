@@ -1,123 +1,270 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuickBuilder | Free Resume Generator</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @media print {
-            .no-print { display: none !important; }
-            body { background: white !important; }
-            .resume-page { 
-                box-shadow: none !important; 
-                margin: 0 !important; 
-                border: none !important;
-            }
-        }
-        .resume-page {
-            width: 210mm;
-            min-height: 297mm;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuickBuilder | Free Resume Generator</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+@media print {
+  @page { size: A4; margin: 0; }
+  .no-print { display: none !important; }
+  body { background: white !important; }
+  html, body, .flex { height: auto !important; overflow: visible !important; }
+  #preview-box { height: auto !important; overflow: visible !important; padding: 0 !important; }
+  .resume-page { transform: none !important; box-shadow: none !important; margin: 0 !important; border: none !important; }
+}
+.resume-page { width: 794px; min-height: 1123px; background: #fff; color: #222; font-size: 13px; line-height: 1.5; transform-origin: top left; overflow: hidden; }
+.resume-page h1 { margin: 0; font-size: 32px; line-height: 1.1; font-weight: 800; color: inherit; }
+.resume-page h2 { margin: 0 0 6px; font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.resume-page section { margin-bottom: 18px; }
+.resume-page ul { margin: 3px 0 6px; padding-left: 18px; list-style: disc; }
+.resume-page .sub { color: #555; }
+.resume-page .ct { color: #555; font-size: 12px; }
+.resume-page .ln { margin-bottom: 3px; white-space: pre-wrap; }
+.resume-page .chips span { display: inline-block; background: var(--a); color: #fff; border-radius: 99px; padding: 2px 10px; margin: 0 4px 4px 0; font-size: 12px; }
+.classic { font-family: Georgia, serif; padding: 48px 52px; }
+.classic header { border-bottom: 3px solid var(--a); padding-bottom: 12px; margin-bottom: 18px; }
+.classic h1 { color: var(--a); }
+.classic h2 { color: var(--a); border-bottom: 1px solid #ddd; padding-bottom: 3px; }
+.sidebar { display: grid; grid-template-columns: 250px 1fr; font-family: system-ui, "Segoe UI", sans-serif; }
+.sidebar aside { background: var(--a); color: #fff; padding: 44px 24px; }
+.sidebar aside h1 { font-size: 26px; }
+.sidebar aside .sub, .sidebar aside .ct { color: #e8eefc; }
+.sidebar aside h2 { border-bottom: 1px solid rgba(255,255,255,.4); padding-bottom: 3px; }
+.sidebar aside .chips span { background: rgba(255,255,255,.2); }
+.sidebar main { padding: 44px 34px; }
+.sidebar main h2 { color: var(--a); }
+.banner { font-family: system-ui, "Segoe UI", sans-serif; }
+.banner header { background: var(--a); color: #fff; padding: 38px 52px; }
+.banner header .sub, .banner header .ct { color: #e8eefc; }
+.banner main { padding: 30px 52px; }
+.banner h2 { color: var(--a); border-left: 4px solid var(--a); padding-left: 8px; }
+.center { font-family: Georgia, serif; padding: 48px 56px; }
+.center header { text-align: center; margin-bottom: 20px; }
+.center h1 { letter-spacing: .08em; text-transform: uppercase; font-size: 28px; }
+.center h2 { text-align: center; color: var(--a); border-top: 1px solid var(--a); border-bottom: 1px solid var(--a); padding: 3px 0; }
+.modern { font-family: "Trebuchet MS", system-ui, sans-serif; padding: 48px 52px; }
+.modern header { margin-bottom: 22px; }
+.modern h1 { color: var(--a); font-size: 36px; }
+.modern h2 { position: relative; padding-left: 14px; color: #222; }
+.modern h2::before { content: ""; position: absolute; left: 0; top: 1px; bottom: 1px; width: 5px; background: var(--a); border-radius: 3px; }
+.compact { font-family: Palatino, "Book Antiqua", serif; padding: 40px 44px; font-size: 12px; }
+.compact header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid var(--a); padding-bottom: 8px; margin-bottom: 14px; }
+.compact h1 { font-size: 26px; }
+.compact h2 { background: #f1f3f6; color: var(--a); padding: 3px 8px; }
+.compact section { margin-bottom: 12px; }
+#chat-log .u { background: #2563eb; color: #fff; margin-left: 2.5rem; }
+#chat-log .a { background: #f3f4f6; color: #1f2937; margin-right: 2.5rem; }
+#chat-log > div { border-radius: .75rem; padding: .5rem .75rem; margin-bottom: .5rem; white-space: pre-wrap; font-size: .875rem; }
+</style>
 </head>
 <body class="bg-gray-100 font-sans">
 
-    <div class="flex flex-col lg:flex-row h-screen">
-        
-        <div class="lg:w-1/3 w-full bg-white p-8 overflow-y-auto shadow-xl no-print">
-            <h1 class="text-2xl font-bold text-blue-600 mb-6">Resume Creator</h1>
-            
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-sm font-semibold">Full Name</label>
-                    <input type="text" id="in-name" placeholder="John Doe" class="w-full border rounded p-2 focus:ring-2 focus:ring-blue-400 outline-none" oninput="update()">
-                </div>
-                <div>
-                    <label class="block text-sm font-semibold">Job Title</label>
-                    <input type="text" id="in-title" placeholder="Full Stack Developer" class="w-full border rounded p-2 focus:ring-2 focus:ring-blue-400 outline-none" oninput="update()">
-                </div>
-                <div>
-                    <label class="block text-sm font-semibold">Email & Phone</label>
-                    <input type="text" id="in-contact" placeholder="john@email.com | +123 456" class="w-full border rounded p-2 focus:ring-2 focus:ring-blue-400 outline-none" oninput="update()">
-                </div>
-                <div>
-                    <label class="block text-sm font-semibold">Summary</label>
-                    <textarea id="in-summary" class="w-full border rounded p-2 h-24" placeholder="Briefly describe yourself..." oninput="update()"></textarea>
-                </div>
-                <div>
-                    <label class="block text-sm font-semibold">Experience</label>
-                    <textarea id="in-exp" class="w-full border rounded p-2 h-32" placeholder="Company A - Senior Dev (2020-2023)..." oninput="update()"></textarea>
-                </div>
-                <div>
-                    <label class="block text-sm font-semibold">Skills (Comma separated)</label>
-                    <input type="text" id="in-skills" placeholder="React, Node.js, CSS" class="w-full border rounded p-2" oninput="update()">
-                </div>
-            </div>
+<div class="flex flex-col lg:flex-row min-h-screen lg:h-screen">
 
-            <button onclick="window.print()" class="w-full mt-8 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition">
-                Download PDF / Print
-            </button>
-        </div>
+  <div class="lg:w-[34%] w-full bg-white p-6 overflow-y-auto shadow-xl no-print">
+    <h1 class="text-2xl font-bold text-blue-600 mb-1">Resume Creator</h1>
+    <p class="text-sm text-gray-500 mb-5">Pick a template, fill in your details, then ask the AI assistant for help.</p>
 
-        <div class="lg:w-2/3 w-full p-8 flex justify-center overflow-y-auto">
-            <div id="print-area" class="resume-page bg-white p-12 shadow-2xl">
-                <div class="border-b-4 border-blue-600 pb-4 mb-6">
-                    <h1 id="out-name" class="text-4xl font-black uppercase text-gray-800 tracking-tight">John Doe</h1>
-                    <p id="out-title" class="text-xl text-blue-600 font-medium">Full Stack Developer</p>
-                    <p id="out-contact" class="text-gray-500 text-sm mt-1 italic">john@email.com | +123 456</p>
-                </div>
-
-                <div class="grid grid-cols-3 gap-8">
-                    <div class="col-span-2">
-                        <h2 class="font-bold text-gray-800 border-b-2 mb-2">PROFESSIONAL SUMMARY</h2>
-                        <p id="out-summary" class="text-gray-700 text-sm mb-6 leading-relaxed">Highly motivated developer...</p>
-
-                        <h2 class="font-bold text-gray-800 border-b-2 mb-2">WORK EXPERIENCE</h2>
-                        <div id="out-exp" class="text-gray-700 text-sm whitespace-pre-wrap leading-relaxed">Your experience details will appear here...</div>
-                    </div>
-
-                    <div>
-                        <h2 class="font-bold text-gray-800 border-b-2 mb-2">SKILLS</h2>
-                        <ul id="out-skills" class="text-gray-700 text-sm list-disc list-inside space-y-1">
-                            <li>JavaScript</li>
-                            <li>React</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+    <div class="mb-5">
+      <div class="flex justify-between items-center mb-2">
+        <label class="block text-sm font-semibold">Template</label>
+        <span id="tpl-count" class="text-xs text-gray-500"></span>
+      </div>
+      <div id="tpl-grid" class="grid grid-cols-2 gap-2 max-h-44 overflow-y-auto pr-1"></div>
     </div>
 
-    <script>
-        function update() {
-            // Get values
-            const name = document.getElementById('in-name').value || "John Doe";
-            const title = document.getElementById('in-title').value || "Your Professional Title";
-            const contact = document.getElementById('in-contact').value || "email@example.com | 000-000";
-            const summary = document.getElementById('in-summary').value || "Enter your summary in the editor...";
-            const exp = document.getElementById('in-exp').value || "Work history goes here...";
-            const skills = document.getElementById('in-skills').value.split(',');
+    <div class="space-y-4">
+      <div>
+        <label class="block text-sm font-semibold">Full Name</label>
+        <input type="text" id="in-name" placeholder="John Doe" class="w-full border rounded p-2 focus:ring-2 focus:ring-blue-400 outline-none" oninput="update()">
+      </div>
+      <div>
+        <label class="block text-sm font-semibold">Job Title</label>
+        <input type="text" id="in-title" placeholder="Full Stack Developer" class="w-full border rounded p-2 focus:ring-2 focus:ring-blue-400 outline-none" oninput="update()">
+      </div>
+      <div>
+        <label class="block text-sm font-semibold">Email &amp; Phone</label>
+        <input type="text" id="in-contact" placeholder="john@email.com | +123 456" class="w-full border rounded p-2 focus:ring-2 focus:ring-blue-400 outline-none" oninput="update()">
+      </div>
+      <div>
+        <label class="block text-sm font-semibold">Summary</label>
+        <textarea id="in-summary" class="w-full border rounded p-2 h-24" placeholder="Briefly describe yourself..." oninput="update()"></textarea>
+      </div>
+      <div>
+        <label class="block text-sm font-semibold">Experience</label>
+        <textarea id="in-exp" class="w-full border rounded p-2 h-32" placeholder="Company A - Senior Dev (2020-2023)&#10;- Built features used by 10k users" oninput="update()"></textarea>
+      </div>
+      <div>
+        <label class="block text-sm font-semibold">Education</label>
+        <textarea id="in-edu" class="w-full border rounded p-2 h-20" placeholder="State University - B.Sc. Computer Science (2016-2020)" oninput="update()"></textarea>
+      </div>
+      <div>
+        <label class="block text-sm font-semibold">Skills (Comma separated)</label>
+        <input type="text" id="in-skills" placeholder="React, Node.js, CSS" class="w-full border rounded p-2" oninput="update()">
+      </div>
+    </div>
 
-            // Set values
-            document.getElementById('out-name').innerText = name;
-            document.getElementById('out-title').innerText = title;
-            document.getElementById('out-contact').innerText = contact;
-            document.getElementById('out-summary').innerText = summary;
-            document.getElementById('out-exp').innerText = exp;
+    <button onclick="window.print()" class="w-full mt-8 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition">
+      Download PDF / Print
+    </button>
+  </div>
 
-            // Handle Skills List
-            const skillList = document.getElementById('out-skills');
-            skillList.innerHTML = '';
-            skills.forEach(skill => {
-                if(skill.trim() !== "") {
-                    let li = document.createElement('li');
-                    li.innerText = skill.trim();
-                    skillList.appendChild(li);
-                }
-            });
-        }
-    </script>
+  <div id="preview-box" class="lg:w-2/3 w-full p-4 lg:p-8 overflow-y-auto">
+    <div id="scaler" class="mx-auto">
+      <div id="print-area" class="resume-page shadow-2xl"></div>
+    </div>
+  </div>
+</div>
+
+<button id="chat-btn" class="no-print fixed bottom-5 right-5 z-40 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-xl px-5 py-3 font-semibold" onclick="toggleChat()">✨ AI Assistant</button>
+<div id="chat-panel" class="no-print hidden fixed z-50 bottom-5 right-5 w-[calc(100%-2.5rem)] sm:w-96 h-[70vh] max-h-[560px] bg-white rounded-2xl shadow-2xl flex flex-col border">
+  <div class="flex justify-between items-center px-4 py-3 border-b">
+    <div class="font-bold text-blue-600">Resume AI Assistant</div>
+    <button onclick="toggleChat()" class="text-gray-500 text-xl leading-none" aria-label="Close">×</button>
+  </div>
+  <div id="chat-log" class="flex-1 overflow-y-auto p-3"></div>
+  <div id="chat-chips" class="px-3 pb-2 flex gap-2 flex-wrap">
+    <button class="text-xs border border-blue-500 text-blue-600 rounded-full px-3 py-1" onclick="quick('Write a professional summary for me.')">Write my summary</button>
+    <button class="text-xs border border-blue-500 text-blue-600 rounded-full px-3 py-1" onclick="quick('Rewrite my experience as strong achievement bullets.')">Improve experience</button>
+    <button class="text-xs border border-blue-500 text-blue-600 rounded-full px-3 py-1" onclick="quick('Suggest skills I should add.')">Suggest skills</button>
+  </div>
+  <div class="flex gap-2 p-3 border-t">
+    <input id="chat-in" class="flex-1 border rounded-lg p-2 text-sm outline-none focus:ring-2 focus:ring-blue-400" placeholder="Ask anything about your resume…" onkeydown="if(event.key==='Enter')send()">
+    <button id="chat-send" class="bg-blue-600 text-white rounded-lg px-4 text-sm font-semibold" onclick="send()">Send</button>
+  </div>
+</div>
+
+<script>
+const LAYOUTS = ['classic','sidebar','banner','center','modern','compact'];
+const COLORS = [['Navy','#1e3a8a'],['Emerald','#047857'],['Crimson','#b91c1c'],['Slate','#334155']];
+const TEMPLATES = [];
+COLORS.forEach(c => LAYOUTS.forEach(l => TEMPLATES.push({ name: c[0] + ' ' + l[0].toUpperCase() + l.slice(1), layout: l, color: c[1] })));
+let tpl = 0;
+
+function esc(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+const $ = id => document.getElementById(id);
+
+function renderGrid(){
+  $('tpl-grid').innerHTML = TEMPLATES.map((t,i) =>
+    '<button type="button" onclick="setTpl('+i+')" class="flex items-center gap-2 border rounded p-2 text-xs text-left ' + (i===tpl ? 'ring-2 ring-blue-500 bg-blue-50' : 'hover:bg-gray-50') + '">' +
+    '<span class="inline-block w-3 h-3 rounded-full shrink-0" style="background:'+t.color+'"></span>' + esc(t.name) + '</button>').join('');
+  $('tpl-count').textContent = (tpl+1) + ' of ' + TEMPLATES.length;
+}
+function setTpl(i){ tpl = i; renderGrid(); update(); }
+
+function lines(text){
+  return text.split('\n').map(l => l.trim()).filter(Boolean);
+}
+function expHtml(text){
+  let out = '', open = false;
+  lines(text).forEach(l => {
+    const b = /^[-•*]\s*/.test(l);
+    if (b){ if(!open){ out += '<ul>'; open = true; } out += '<li>' + esc(l.replace(/^[-•*]\s*/,'')) + '</li>'; }
+    else { if(open){ out += '</ul>'; open = false; } out += '<div class="ln"><b>' + esc(l) + '</b></div>'; }
+  });
+  return out + (open ? '</ul>' : '');
+}
+function eduHtml(text){ return lines(text).map(l => '<div class="ln">' + esc(l) + '</div>').join(''); }
+
+function update(){
+  const name = $('in-name').value || 'John Doe';
+  const title = $('in-title').value || 'Your Professional Title';
+  const contact = $('in-contact').value || 'email@example.com | 000-000';
+  const summary = $('in-summary').value || 'Enter your summary in the editor...';
+  const exp = $('in-exp').value || 'Work history goes here...';
+  const edu = $('in-edu').value;
+  const skills = $('in-skills').value.split(',').map(s => s.trim()).filter(Boolean);
+  const t = TEMPLATES[tpl];
+
+  const sSum = '<section><h2>Professional Summary</h2><div class="sub">' + esc(summary) + '</div></section>';
+  const sExp = '<section><h2>Work Experience</h2>' + expHtml(exp) + '</section>';
+  const sEdu = edu.trim() ? '<section><h2>Education</h2>' + eduHtml(edu) + '</section>' : '';
+  const sSk = skills.length ? '<section><h2>Skills</h2><div class="chips">' + skills.map(s => '<span>' + esc(s) + '</span>').join('') + '</div></section>' : '';
+  const hdr = '<h1>' + esc(name) + '</h1><div class="sub">' + esc(title) + '</div><div class="ct">' + esc(contact) + '</div>';
+
+  let h;
+  if (t.layout === 'sidebar') h = '<aside><h1>' + esc(name) + '</h1><div class="sub" style="margin:4px 0 18px">' + esc(title) + '</div><section><h2>Contact</h2><div class="ct">' + esc(contact) + '</div></section>' + sSk + '</aside><main>' + sSum + sExp + sEdu + '</main>';
+  else if (t.layout === 'banner') h = '<header>' + hdr + '</header><main>' + sSum + sExp + sEdu + sSk + '</main>';
+  else if (t.layout === 'compact') h = '<header><div><h1>' + esc(name) + '</h1><div class="sub">' + esc(title) + '</div></div><div class="ct" style="text-align:right">' + esc(contact) + '</div></header>' + sSum + sExp + sEdu + sSk;
+  else h = '<header>' + hdr + '</header>' + sSum + sExp + sEdu + sSk;
+
+  const p = $('print-area');
+  p.className = 'resume-page shadow-2xl ' + t.layout;
+  p.style.setProperty('--a', t.color);
+  p.innerHTML = h;
+  fit();
+}
+
+function fit(){
+  const box = $('preview-box'), p = $('print-area'), sc = $('scaler');
+  const avail = box.clientWidth - (window.innerWidth < 1024 ? 32 : 64);
+  const k = Math.min(1, avail / 794);
+  p.style.transform = k < 1 ? 'scale(' + k + ')' : '';
+  sc.style.width = (794 * k) + 'px';
+  sc.style.height = (p.offsetHeight * k) + 'px';
+}
+window.addEventListener('resize', fit);
+
+const history = [];
+function toggleChat(){
+  const open = $('chat-panel').classList.toggle('hidden') === false;
+  $('chat-btn').classList.toggle('hidden', open);
+  if (open && !history.length) addMsg('a', 'Hi! I can write your summary, polish your experience, suggest skills, or answer resume questions. What do you need?');
+}
+function addMsg(who, text, fields){
+  const d = document.createElement('div');
+  d.className = who;
+  d.textContent = text;
+  if (fields){
+    const map = { summary:'in-summary', exp:'in-exp', skills:'in-skills', title:'in-title', edu:'in-edu' };
+    Object.keys(fields).forEach(k => {
+      if (!map[k]) return;
+      const b = document.createElement('button');
+      b.className = 'block mt-2 text-xs bg-blue-600 text-white rounded px-3 py-1';
+      b.textContent = 'Apply to ' + k;
+      b.onclick = () => { $(map[k]).value = String(fields[k]); update(); b.textContent = 'Applied ✓'; b.disabled = true; };
+      d.appendChild(b);
+    });
+  }
+  $('chat-log').appendChild(d);
+  $('chat-log').scrollTop = $('chat-log').scrollHeight;
+  return d;
+}
+function quick(t){ $('chat-in').value = t; send(); }
+function resumeState(){
+  return { name:$('in-name').value, title:$('in-title').value, contact:$('in-contact').value, summary:$('in-summary').value, experience:$('in-exp').value, education:$('in-edu').value, skills:$('in-skills').value };
+}
+async function send(){
+  const input = $('chat-in'), text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  addMsg('u', text);
+  history.push({ role:'user', content:text });
+  const wait = addMsg('a', 'Thinking…');
+  $('chat-send').disabled = true;
+  try {
+    const r = await fetch('/api/chat', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ messages: history.slice(-12), resume: resumeState() })
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error || 'Request failed');
+    let reply = data.reply || '', fields = null;
+    const m = reply.match(/```fields\s*([\s\S]*?)```/);
+    if (m){ try { fields = JSON.parse(m[1]); } catch(e){} reply = reply.replace(m[0], '').trim(); }
+    history.push({ role:'assistant', content: reply });
+    wait.remove();
+    addMsg('a', reply, fields);
+  } catch (err) {
+    wait.textContent = 'Sorry, the assistant is unavailable right now. ' + err.message;
+    history.pop();
+  } finally { $('chat-send').disabled = false; }
+}
+
+renderGrid();
+update();
+</script>
 </body>
 </html>
